@@ -27,6 +27,7 @@
 #include <dlfcn.h>
 
 #define RIL_LIB_NAME "libril-qc-qmi-1.so"
+#define RADIO_TECH_DC_HSPAP 20
 
 /*
  * These structs are only avaiable in ril_internal.h
@@ -64,21 +65,23 @@ static void onRequestCompleteShim(RIL_Token t, RIL_Errno e, void* response, size
     int request = requestInfo->pCI->requestNumber;
     switch (request) {
         /*
-         * Our RIL returns a bigger response than the expected one for RIL_REQUEST_OPERATOR.
-         * Trim it down to allow libril to handle it properly.
+         * RIL can report a DC-HSPAP rat which is not supported by AOSP,
+         * resulting in missing mobile data icon.
+         * Remap DC-HSPAP (20) to HSPAP (15) to get a H+ mobile data icon.
          */
-        case RIL_REQUEST_OPERATOR:
-            if (response == NULL) {
+        case RIL_REQUEST_DATA_REGISTRATION_STATE:
+            if (responselen != sizeof(RIL_DataRegistrationStateResponse)) {
                 ALOGE("%s: invalid response length", __func__);
                 goto do_not_handle;
             }
 
-            int numStrings = responselen / sizeof(char *);
+            RIL_DataRegistrationStateResponse* dataRegState =
+                (RIL_DataRegistrationStateResponse*)response;
 
-            // Returned length is 6 but libril now wants 3
-            int hackedLength = numStrings / 2;
-
-            responselen = hackedLength * sizeof(char *);
+            if (dataRegState->rat == RADIO_TECH_DC_HSPAP) {
+                dataRegState->rat = RADIO_TECH_HSPAP;
+                ALOGI("%s: remapping DC-HSPAP to HSPAP", __func__);
+            }
             break;
     }
 
