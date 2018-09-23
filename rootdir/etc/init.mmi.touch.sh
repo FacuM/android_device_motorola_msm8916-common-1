@@ -1,6 +1,6 @@
-#!/vendor/bin/sh
+#!/system/bin/sh
 
-PATH=/sbin:/vendor/sbin:/vendor/bin:/vendor/xbin
+PATH=/sbin:/system/sbin:/system/bin:/system/xbin
 export PATH
 
 while getopts d op;
