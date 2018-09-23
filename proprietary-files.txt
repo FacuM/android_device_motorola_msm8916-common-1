@@ -15,18 +15,19 @@ vendor/lib/libadiertac.so
 vendor/lib/libaudcal.so
 vendor/lib/libqct_resampler.so
 
-# Bluetooth - from aljeter
-vendor/lib/hw/android.hardware.bluetooth@1.0-impl-qti.so|9a330c399b3b07040bb63fa62773b1f24e29fdd8
-vendor/lib/com.qualcomm.qti.bluetooth_audio@1.0_vendor.so|24e30d803c9f312bc1813d89bd70cf2c64a0b9ae
-vendor/lib/libbtnv.so|88cd17744fb1a52536c1f2f77d5712f7847ca82e
-vendor/lib/com.qualcomm.qti.ant@1.0_vendor.so|471dbf178e4c0708bb0ce3617ce767f271dbc49d
-vendor/lib/libbt-hidlclient.so|73e677521c6f8c3dc1bfb8f344bac678ec0cc458
-vendor/etc/init/android.hardware.bluetooth@1.0-service-qti.rc|1a2dc1c2d217f47b9c99a0afa9e4912abd32e381
-vendor/bin/hw/android.hardware.bluetooth@1.0-service-qti|b5465f0bc302b47a67b34751d6f3f472af3eb75b
+# Bluetooth
+vendor/lib/hw/android.hardware.bluetooth@1.0-impl-qti.so
+vendor/lib/com.qualcomm.qti.bluetooth_audio@1.0_vendor.so
+vendor/lib/libbtnv.so
 
 # Camera
 lib/libmot_sensorlistener.so
+vendor/lib/libbson.so
 vendor/lib/libfastcvopt.so
+
+# Face Unlock
+vendor/lib/libprotobuf-cpp-haxx.so|c280b24acc9c17ca20072d51be9f87b63434dc04
+vendor/lib/libfacenet-32.so|09cf052e838d6aa16f2f6d7932643f58172566ba
 
 # Camera firmware
 etc/firmware/cpp_firmware_v1_1_1.fw
@@ -49,10 +50,10 @@ vendor/lib/libmmQSM.so
 vendor/lib/librpmb.so
 vendor/lib/libssd.so
 
-# FM Radio - from aljeter
--lib/vendor.qti.hardware.fm@1.0.so|90db724dd7a43917b6c9243925c0b3e7c7e7059a
-vendor/lib/hw/vendor.qti.hardware.fm@1.0-impl.so|12dc40b9341f014ec834bda40cb13ebc736c21a0
-vendor/lib/vendor.qti.hardware.fm@1.0_vendor.so|40aaac77ad5c297ce91e8ef7444c8a09e0a16621
+# FM Radio - from oneplus3 - OPR6.170623.013 system dump
+-lib/vendor.qti.hardware.fm@1.0.so|a32ae5e1a604cc0fa0f1e0704616b5af4f0188a9
+vendor/lib/hw/vendor.qti.hardware.fm@1.0-impl.so|f64cc14d4c2ac1387a618ac90bd8688efd9fab1e
+vendor/lib/vendor.qti.hardware.fm@1.0_vendor.so|8ac093a196439dc403b2fa099d838c33242efa82
 
 # GPS
 etc/flp.conf
@@ -102,24 +103,17 @@ etc/firmware/a300_pm4.fw
 etc/firmware/a420_pfp.fw
 etc/firmware/a420_pm4.fw
 
-# Media - from aljeter
-vendor/lib/libmm-color-convertor.so|a2f4491469425c3698e6a4a894ec46218a198f2b
-vendor/lib/libOmxAacDec.so|38ac9397aa75f598dd0ea48e56321837691ba0e3
-vendor/lib/libOmxEvrcDec.so|b003a2147230e3040a2b64ba9fa94367961fc7e2
-vendor/lib/libOmxQcelp13Dec.so|8e890cbe50cb2f404648c967d00d7d0d8770bd6d
-
-# IMS - from OP3
--vendor/app/ims/ims.apk|aeea83861796ec7b84c90d7819ed3209354c58dc
--vendor/app/imssettings/imssettings.apk|6fa49044ba0b5c37854194db37b5b5685ca57da2
-bin/ims_rtp_daemon|56c94c6987090681ab16e2baa8dd5026a6abb489
-bin/imscmservice|38036a3535c8ed360f78caa2a2ad69f7b79b97b1
-bin/imsdatadaemon|7860a86666bb33b245c09b309fe97d74a4db1cc0
-bin/imsqmidaemon|481cdfd2a24cfeb8b4e6309559b7c3c728051230
-bin/imsrcsd|40c6695f00cab9aebb4607224e61e16acc9bc6f1
+# IMS
+-app/ims/ims.apk|aeea83861796ec7b84c90d7819ed3209354c58dc
+-app/imssettings/imssettings.apk|6fa49044ba0b5c37854194db37b5b5685ca57da2
+bin/ims_rtp_daemon|15972385d74b9fa7e0a157d76360b053e2225661
+bin/imscmservice|04dcb605334f35f7f0b5d7586e4099a03bd77d56
+bin/imsdatadaemon|4a636811f02e1d14d2910af4508af8d972ad9637
+bin/imsqmidaemon|44194b0eec2733d65f973de7a0857d068d633a68
+etc/permissions/ims.xml|b77963459ea6664a0eddcbc5ca7f4220e4895c26
 etc/permissions/imscm.xml|8b99ec26c783966bbea1fcb8e72c7c0206a4e802
-etc/permissions/qti-vzw-ims-internal.xml|3e41b645dd4ad8bad6775c103a34bfd7a507a4f7
+etc/permissions/qti_permissions.xml|2826b33ed8e2756cc748c80bd6c466ff8af97ac5
 -framework/imscmlibrary.jar|0c24d6540c06efede52169c1445272f43748180f
-vendor/framework/qti-vzw-ims-internal.jar|d553e73402351a1fda47f87c9f87ee53339f80a6
 vendor/lib/com.qualcomm.qti.imscmservice@1.0.so|cdbf12be434d8e929d3a4ce0517fadd3b712de4f
 vendor/lib/lib-dplmedia.so|08cc356e607834cea11a85d704eede3ebe4f2aa4
 vendor/lib/libimscamera_jni.so|e19c10d9d8f388a045345b5f374c6712fd18c979
@@ -209,13 +203,6 @@ vendor/lib/libSubSystemShutdown.so
 # Sensorhub Firmware
 etc/firmware/sensorhubfw.bin|90ec2a32050faf764529c22639e7a2a0196e28fc
 etc/firmware/sensorhubver.txt|7719a1c782a1ba91c031a682a0a2f8658209adbf
-
-# Sensors
-bin/stml0xx
-lib/hw/sensorhub.msm8916.so
-
-# STLport
-vendor/lib/libstlport.so
 
 # Thermal
 vendor/bin/thermal-engine

@@ -18,7 +18,9 @@
 
 set -e
 
-export INITIAL_COPYRIGHT_YEAR=2016
+if [ -z $INITIAL_COPYRIGHT_YEAR ]; then
+    INITIAL_COPYRIGHT_YEAR=2016
+fi
 
 # Load extractutils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
@@ -26,7 +28,7 @@ if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
 
 CM_ROOT="$MY_DIR"/../../..
 
-HELPER="$CM_ROOT"/vendor/lineage/build/tools/extract_utils.sh
+HELPER="$CM_ROOT"/vendor/aosp/build/tools/extract_utils.sh
 if [ ! -f "$HELPER" ]; then
     echo "Unable to find helper script at $HELPER"
     exit 1

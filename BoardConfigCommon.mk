@@ -24,6 +24,7 @@ TARGET_SPECIFIC_HEADER_PATH := $(VENDOR_PATH)/include
 
 TARGET_FS_CONFIG_GEN += \
     $(VENDOR_PATH)/fs_config/file_caps.fs \
+    $(VENDOR_PATH)/fs_config/qcom_aids.fs \
     $(VENDOR_PATH)/fs_config/mot_aids.fs
 
 # Platform
@@ -61,6 +62,9 @@ BOARD_KERNEL_CMDLINE += pm.sleep_mode=1
 TARGET_USES_MKE2FS := true
 
 # Audio
+AUDIO_FEATURE_ENABLED_KPI_OPTIMIZE := true
+AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
+AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 BOARD_USES_ALSA_AUDIO := true
 USE_CUSTOM_AUDIO_POLICY := 1
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
@@ -73,11 +77,9 @@ QCOM_BT_READ_ADDR_FROM_PROP := true
 
 # Camera
 USE_DEVICE_SPECIFIC_CAMERA := true
-TARGET_PROVIDES_CAMERA_HAL := false
 TARGET_HAS_LEGACY_CAMERA_HAL1 := true
-TARGET_USES_NON_TREBLE_CAMERA := true
 TARGET_USES_MEDIA_EXTENSIONS := true
-TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
+TARGET_PROVIDES_CAMERA_HAL := true
 
 # Charger
 BACKLIGHT_PATH := /sys/class/leds/lcd-backlight/brightness
@@ -93,16 +95,22 @@ TARGET_LEGACY_HW_DISK_ENCRYPTION := true
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 2048*1024
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
-OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
-TARGET_USES_C2D_COMPOSITION := true
-TARGET_USES_ION := true
-TARGET_USES_NEW_ION_API :=true
 TARGET_USES_GRALLOC1 := true
+TARGET_USES_ION := true
+TARGET_USES_NEW_ION_API := true
+
+# Display Renderer
+OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 USE_OPENGL_RENDERER := true
 
 # FM
 BOARD_HAVE_QCOM_FM := true
 TARGET_QCOM_NO_FM_FIRMWARE := true
+
+# GPS
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := true
+BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
+USE_DEVICE_SPECIFIC_GPS := true
 
 # HIDL
 DEVICE_MANIFEST_FILE := $(VENDOR_PATH)/manifest.xml
@@ -113,6 +121,7 @@ TARGET_PROVIDES_LIBLIGHT := true
 # Partitions
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
+TARGET_EXFAT_DRIVER := exfat
 
 # Properties
 TARGET_SYSTEM_PROP += $(VENDOR_PATH)/system.prop
@@ -131,37 +140,24 @@ TARGET_USERIMAGES_USE_F2FS := true
 # Release Tools
 TARGET_RELEASETOOLS_EXTENSIONS := $(VENDOR_PATH)
 
+# RIL
+BOARD_PROVIDES_LIBRIL := true
+
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
 include device/qcom/sepolicy/legacy-sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(VENDOR_PATH)/sepolicy
 
-ifeq ($(HOST_OS),linux)
-  ifneq ($(TARGET_BUILD_VARIANT),eng)
-    ifeq ($(WITH_DEXPREOPT),)
-      WITH_DEXPREOPT := true
-      WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
-    endif
-  endif
-endif
-
-# SHIMS
+# Shims
 TARGET_LD_SHIM_LIBS := \
     /system/lib/libandroid.so|libshim_ril.so \
+    /system/lib/libmdmcutback.so|libqsap_shim.so \
+    /system/lib/libmot_sensorlistener.so|libsensor.so \
     /system/lib/libjustshoot.so|libshims_camera.so \
-    /system/lib/libmot_sensorlistener.so|libshims_sensorlistener.so \
-    /system/vendor/lib/libmmcamera_wavelet_lib.so|libshim_atomic.so \
-    /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
-    /system/vendor/lib/libmmqjpeg_codec.so|libboringssl-compat.so \
     /system/vendor/lib/libmmcamera_wavelet_lib.so|libc_util.so \
-    /system/vendor/lib/libizat_core.so|libshims_get_process_name.so \
-    /system/lib/libmdmcutback.so|libqsap_shim.so
-
-# Power
-TARGET_HAS_NO_WIFI_STATS := true
-TARGET_USES_INTERACTION_BOOST := true
-TARGET_HAS_LEGACY_POWER_STATS := true
-TARGET_HAS_NO_POWER_STATS := true
+    /system/vendor/lib/libmmqjpeg_codec.so|libboringssl-compat.so \
+    /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
+    /system/lib/libfacenet.so|libprotobuf-cpp-haxx.so
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
@@ -177,6 +173,7 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 
 # Optimize
+MALLOC_SVELTE := true
 PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
 PRODUCT_ALWAYS_PREOPT_EXTRACTED_APK := true
 PRODUCT_USE_PROFILE_FOR_BOOT_IMAGE := true
